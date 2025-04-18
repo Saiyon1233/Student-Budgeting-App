@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debt Management</title>
+    <script>
+        function checkLogin() {
+            let userEmail = localStorage.getItem("userEmail");
+            if (!userEmail) {
+                window.location.href = "index.html";
+            } else {
+                document.getElementById("userEmail").innerText = userEmail;
+                loadDebt();
+            }
+        }
+
+        function loadDebt() {
+            let email = localStorage.getItem("userEmail");
+            fetch(`http://localhost:8080/DebtManagement/webresources/debt/get/${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    let table = document.getElementById("debtTable");
+                    table.innerHTML = "<tr><th>Debt Name</th><th>Amount</th><th>Interest Rate</th><th>Due Date</th></tr>";
+                    data.forEach(debt => {
+                        table.innerHTML += `<tr><td>${debt.debtName}</td><td>${debt.amount}</td><td>${debt.interestRate}%</td><td>${debt.dueDate}</td></tr>`;
+                    });
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        function addDebt() {
+            let email = localStorage.getItem("userEmail");
+            let debtName = document.getElementById("debtName").value;
+            let amount = document.getElementById("amount").value;
+            let interestRate = document.getElementById("interestRate").value;
+            let dueDate = document.getElementById("dueDate").value;
+
+            fetch("http://localhost:8080/DebtManagement/webresources/debt/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `email=${email}&debtName=${debtName}&amount=${amount}&interestRate=${interestRate}&dueDate=${dueDate}`
+            })
+            .then(() => {
+                alert("Debt added successfully!");
+                loadDebt();
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        window.onload = checkLogin;
+    </script>
+</head>
+<body>
+    <h2>Debt Management</h2>
+    <p>Welcome, <span id="userEmail"></span></p>
+
+    <h3>Add Debt</h3>
+    <input type="text" id="debtName" placeholder="Debt Name">
+    <input type="number" id="amount" placeholder="Amount">
+    <input type="number" id="interestRate" placeholder="Interest Rate">
+    <input type="date" id="dueDate">
+    <button onclick="addDebt()">Add</button>
+
+    <h3>Your Debts</h3>
+    <table id="debtTable"></table>
+</body>
+</html>

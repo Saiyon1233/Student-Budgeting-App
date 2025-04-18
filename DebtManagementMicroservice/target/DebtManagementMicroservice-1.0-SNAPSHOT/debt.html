@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Budget Management</title>
+    <script>
+        function checkLogin() {
+            // Temporarily disable login check
+            console.log("Login check disabled for testing.");
+            document.getElementById("userEmail").innerText = "test@example.com";
+        } 
+
+        function loadBudget() {
+            let email = localStorage.getItem("userEmail");
+            fetch(`http://localhost:8080/BudgetManagement/webresources/budget/get/${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    let table = document.getElementById("debtTable");
+                    table.innerHTML = "<tr><th>Category</th><th>Amount</th></tr>";
+                    data.forEach(budget => {
+                        table.innerHTML += `<tr><td>${budget.category}</td><td>${budget.amount}</td></tr>`;
+                    });
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        function addBudget() {
+            let email = localStorage.getItem("userEmail");
+            let category = document.getElementById("category").value;
+            let amount = document.getElementById("amount").value;
+
+            fetch("http://localhost:8080/BudgetManagement/webresources/budget/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `email=${encodeURIComponent(email)}&category=${encodeURIComponent(category)}&amount=${encodeURIComponent(amount)}`
+            })
+            .then(response => response.json())
+            .then(() => {
+                alert("Budget added successfully!");
+                loadBudget();
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        window.onload = checkLogin;
+    </script>
+</head>
+<body>
+    <h2>Budget Management</h2>
+    <p>Welcome, <span id="userEmail"></span></p>
+    
+    <h3>Add Budget Entry</h3>
+    <input type="text" id="category" placeholder="Category">
+    <input type="number" id="amount" placeholder="Amount">
+    <button onclick="addBudget()">Add</button>
+
+    <h3>Your Budget Entries</h3>
+    <table id="budgetTable"></table>
+
+    <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+    <button onclick="localStorage.removeItem('userEmail'); window.location.href='index.html'">Logout</button>
+</body>
+</html>

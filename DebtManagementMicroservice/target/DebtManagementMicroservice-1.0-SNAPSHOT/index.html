@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Login</title>
+    <script>
+        function loginUser() {
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            fetch("http://localhost:8080/UserManagement/webresources/users/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.email) {
+                    alert("Login successful! Welcome, " + data.email);
+                    localStorage.setItem("userEmail", data.email);
+                    window.location.href = "dashboard.html"; // Redirect after login
+                } else {
+                    alert("Invalid login credentials!");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</head>
+<body>
+    <h2>User Login</h2>
+    <input type="text" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="loginUser()">Login</button>
+</body>
+</html>
