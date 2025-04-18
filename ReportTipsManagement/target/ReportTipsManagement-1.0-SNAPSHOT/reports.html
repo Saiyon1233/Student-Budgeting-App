@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reports & Tips</title>
+    <script>
+        function checkLogin() {
+            let userEmail = localStorage.getItem("userEmail");
+            if (!userEmail) {
+                window.location.href = "index.html";
+            } else {
+                document.getElementById("userEmail").innerText = userEmail;
+                loadReports();
+            }
+        }
+
+        function loadReports() {
+            let email = localStorage.getItem("userEmail");
+            fetch(`http://localhost:8080/ReportTipsManagement/webresources/reports/get/${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    let table = document.getElementById("reportsTable");
+                    table.innerHTML = "<tr><th>Report</th><th>Tip</th></tr>";
+                    data.forEach(report => {
+                        table.innerHTML += `<tr><td>${report.reportText}</td><td>${report.tip}</td></tr>`;
+                    });
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        function addReport() {
+            let email = localStorage.getItem("userEmail");
+            let reportText = document.getElementById("reportText").value;
+            let tip = document.getElementById("tip").value;
+
+            fetch("http://localhost:8080/ReportTipsManagement/webresources/reports/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `email=${email}&reportText=${reportText}&tip=${tip}`
+            })
+            .then(() => {
+                alert("Report added successfully!");
+                loadReports();
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        window.onload = checkLogin;
+    </script>
+</head>
+<body>
+    <h2>Financial Reports & Tips</h2>
+    <p>Welcome, <span id="userEmail"></span></p>
+
+    <h3>Add Report</h3>
+    <input type="text" id="reportText" placeholder="Report Details">
+    <input type="text" id="tip" placeholder="Financial Tip">
+    <button onclick="addReport()">Add</button>
+
+    <h3>Your Reports & Tips</h3>
+    <table id="reportsTable"></table>
+
+    <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+    <button onclick="localStorage.removeItem('userEmail'); window.location.href='index.html'">Logout</button>
+</body>
+</html>

@@ -1,0 +1,7 @@
+business/ReportTipsBusiness.class
+persistence/DatabaseConnection.class
+endpoint/ApplicationConfig.class
+persistence/ReportTips_CRUD.class
+persistence/TestDBConnection.class
+helper/ReportTip.class
+endpoint/ReportTipsResource.class

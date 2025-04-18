@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Report & Tips Management</title>
+    <script>
+        function checkLogin() {
+            let userEmail = localStorage.getItem("userEmail");
+            if (!userEmail) {
+                window.location.href = "index.html"; // Redirect if not logged in
+            } else {
+                document.getElementById("welcomeMessage").innerText = "Welcome, " + userEmail;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("userEmail");
+            window.location.href = "index.html";
+        }
+
+        window.onload = checkLogin;
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { max-width: 600px; margin: auto; }
+        button, a { display: block; width: 80%; margin: 10px auto; padding: 10px; font-size: 16px; text-decoration: none; text-align: center; background-color: #007BFF; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        button:hover, a:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 id="welcomeMessage"></h2>
+
+        <h3>Manage Reports & Tips</h3>
+        <a href="reports.html">View Financial Reports & Tips</a>
+
+        <button onclick="logout()">Logout</button>
+    </div>
+</body>
+</html>
