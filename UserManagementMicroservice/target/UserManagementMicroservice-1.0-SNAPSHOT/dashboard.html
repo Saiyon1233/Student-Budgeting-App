@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <script>
+        function checkLogin() {
+            let userEmail = localStorage.getItem("userEmail");
+            if (!userEmail) {
+                window.location.href = "index.html"; // Redirect if not logged in
+            } else {
+                document.getElementById("welcomeMessage").innerText = "Welcome, " + userEmail;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("userEmail");
+            window.location.href = "index.html";
+        }
+
+        window.onload = checkLogin;
+    </script>
+</head>
+<body>
+    <h2 id="welcomeMessage"></h2>
+    <button onclick="logout()">Logout</button>
+</body>
+</html>
