@@ -1,0 +1,8 @@
+persistence/DatabaseConnection.class
+endpoint/ApplicationConfig.class
+business/FrontendBusiness.class
+persistence/TestDBConnection.class
+helper/UserSession.class
+endpoint/FrontendResource.class
+servlet/LoginServlet.class
+persistence/Frontend_CRUD.class
